@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>TODOアプリ</title>
+<style>
+body{
+  font-family:sans-serif;
+  text-align:center;
+  background:#f5f5f5;
+}
+.container{
+  width:300px;
+  margin:50px auto;
+}
+input{
+  width:70%;
+  padding:10px;
+}
+button{
+  padding:10px;
+  margin:5px;
+  cursor:pointer;
+}
+li{
+  list-style:none;
+  margin:10px 0;
+  padding:10px;
+  background:white;
+  display:flex;
+  justify-content:space-between;
+}
+.done{
+  text-decoration:line-through;
+  color:gray;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>TODO</h1>
+
+  <input id="taskInput" placeholder="やること">
+  <button onclick="addTask()">追加</button>
+
+  <div>
+    <button class="filter-btn" onclick="filterTask('all', event)">全て</button>
+    <button class="filter-btn" onclick="filterTask('done', event)">完了</button>
+    <button class="filter-btn" onclick="filterTask('todo', event)">未完了</button>
+    <button onclick="clearAll()">全削除</button>
+  </div>
+
+  <ul id="taskList"></ul>
+</div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let filter = "all";
+
+function save(){
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function render(){
+  const list = document.getElementById("taskList");
+  list.innerHTML = "";
+
+  tasks
+    .filter(task=>{
+      if(filter === "all") return true;
+      if(filter === "done") return task.done;
+      if(filter === "todo") return !task.done;
+    })
+    .forEach((task,index)=>{
+      const li = document.createElement("li");
+
+      li.innerHTML = `
+        <span ondblclick="editTask(${index})" onclick="toggle(${index})" class="${task.done ? 'done' : ''}">
+          ${task.text}
+        </span>
+        <button onclick="removeTask(${index})">削除</button>
+      `;
+
+      list.appendChild(li);
+    });
+}
+
+function addTask(){
+  const input = document.getElementById("taskInput");
+  if(input.value === "") return;
+
+  tasks.push({ text: input.value, done:false });
+  input.value = "";
+
+  save();
+  render();
+}
+
+function removeTask(index){
+  tasks.splice(index,1);
+  save();
+  render();
+}
+
+function toggle(index){
+  tasks[index].done = !tasks[index].done;
+  save();
+  render();
+}
+
+function editTask(index){
+  const newText = prompt("編集してください", tasks[index].text);
+  if(newText === null || newText.trim() === "") return;
+
+  tasks[index].text = newText;
+  save();
+  render();
+}
+
+function clearAll(){
+  if(confirm("全部削除しますか？")){
+    tasks = [];
+    save();
+    render();
+  }
+}
+
+function filterTask(type, event){
+  filter = type;
+
+  document.querySelectorAll(".filter-btn").forEach(btn=>{
+    btn.style.opacity = "0.5";
+  });
+
+  event.target.style.opacity = "1";
+
+  render();
+}
+
+// Enterキー
+const input = document.getElementById("taskInput");
+input.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    addTask();
+  }
+});
+
+// 初期表示
+render();
+
+// 初期ボタン状態
+window.onload = () => {
+  document.querySelector(".filter-btn").style.opacity = "1";
+};
+</script>
+
+</body>
+</html>
