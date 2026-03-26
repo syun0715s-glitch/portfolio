@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>数当てゲーム</title>
+</head>
+<body>
+
+<h1>数当てゲーム</h1>
+
+<p>1〜10の数字を当てて！</p>
+
+<input id="input" type="number">
+<button onclick="check()">確認</button>
+
+<p id="result"></p>
+
+<script>
+const answer = Math.floor(Math.random() * 10) + 1;
+
+function check() {
+  const num = Number(document.getElementById("input").value);
+  const result = document.getElementById("result");
+
+  if (num === answer) {
+    result.textContent = "正解！";
+
+  } else if (num < answer) {
+    result.textContent = "もっと大きい";
+
+  } else {
+    result.textContent = "もっと小さい";
+  }
+}
+</script>
+
+</body>
+</html>
