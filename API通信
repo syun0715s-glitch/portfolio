@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>最強TODOアプリ</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      text-align: center;
+    }
+
+    .container {
+      width: 320px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    input {
+      padding: 10px;
+      width: 65%;
+    }
+
+    button {
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    li {
+      margin: 10px 0;
+      padding: 10px;
+      background: #e3e3e3;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>TODOアプリ（完成版）</h1>
+
+  <input id="taskInput" placeholder="やること入力">
+  <br>
+  <button onclick="addTask()">追加</button>
+  <button onclick="getTasks()">API取得</button>
+  <button onclick="getWeather()">天気</button>
+
+  <ul id="list"></ul>
+</div>
+
+<script>
+const list = document.getElementById("list");
+
+// ===== 保存 =====
+function saveTasks() {
+  const items = [];
+  document.querySelectorAll("li").forEach(li => {
+    items.push(li.textContent);
+  });
+  localStorage.setItem("tasks", JSON.stringify(items));
+}
+
+// ===== 読み込み =====
+function loadTasks() {
+  const data = JSON.parse(localStorage.getItem("tasks")) || [];
+  data.forEach(text => createTask(text));
+}
+
+// ===== タスク作成 =====
+function createTask(text) {
+  const li = document.createElement("li");
+  li.textContent = text;
+
+  // クリックで削除
+  li.onclick = () => {
+    li.remove();
+    saveTasks();
+  };
+
+  list.appendChild(li);
+}
+
+// ===== 追加 =====
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const text = input.value;
+
+  if (text === "") return;
+
+  createTask(text);
+  saveTasks();
+  input.value = "";
+}
+
+// ===== API取得（async/await） =====
+async function getTasks() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=5");
+  const data = await res.json();
+
+  list.innerHTML = "";
+
+  data.forEach(item => {
+    createTask(item.title + (item.completed ? " ✅" : " ❌"));
+  });
+
+  saveTasks();
+}
+
+// ===== 天気API =====
+async function getWeather() {
+  const res = await fetch("https://wttr.in/Tokyo?format=j1");
+  const data = await res.json();
+
+  const temp = data.current_condition[0].temp_C;
+  const weather = data.current_condition[0].weatherDesc[0].value;
+
+  createTask(`天気: ${weather} / 気温: ${temp}℃`);
+  saveTasks();
+}
+
+// 初期読み込み
+loadTasks();
+</script>
+
+</body>
+</html>
