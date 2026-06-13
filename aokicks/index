@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>コピー</title>
+
+<style>
+*{
+ margin:0;
+ padding:0;
+ box-sizing:border-box;
+}
+
+body{
+ font-family:sans-serif;
+ background:#fff;
+}
+
+header{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:15px 20px;
+ border-bottom:1px solid #ddd;
+ position:sticky;
+ top:0;
+ background:white;
+}
+
+.logo{
+ font-size:24px;
+ font-weight:bold;
+}
+
+.icons{
+ display:flex;
+ gap:15px;
+}
+
+.icon{
+ font-size:24px;
+ cursor:pointer;
+}
+
+.menu{
+ position:fixed;
+ top:0;
+ left:-250px;
+ width:250px;
+ height:100%;
+ background:#111;
+ color:white;
+ transition:.3s;
+ padding-top:60px;
+}
+
+.menu.active{
+ left:0;
+}
+
+.menu a{
+ display:block;
+ color:white;
+ text-decoration:none;
+ padding:15px 20px;
+}
+
+.menu a:hover{
+ background:#333;
+}
+
+.hero{
+ height:350px;
+ background:url("https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200")
+ center/cover;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ color:white;
+}
+
+.hero h1{
+ font-size:40px;
+ background:rgba(0,0,0,.5);
+ padding:10px 20px;
+}
+
+.products{
+ padding:40px 20px;
+}
+
+.products h2{
+ text-align:center;
+ margin-bottom:30px;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ gap:20px;
+}
+
+.card{
+ border:1px solid #ddd;
+ text-align:center;
+ padding:10px;
+}
+
+.card img{
+ width:100%;
+}
+
+.card h3{
+ margin:10px 0;
+}
+
+button{
+ padding:10px 20px;
+ background:black;
+ color:white;
+ border:none;
+ cursor:pointer;
+}
+
+footer{
+ background:#111;
+ color:white;
+ text-align:center;
+ padding:30px;
+ margin-top:50px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="menu"id="menu">
+ <a href="#">HOME</a>
+ <a href="#">SHOP</a>
+ <a href="#">NEW</a>
+ <a href="#">CONTACT</a>
+</div>
+
+<header>
+ <div class="icon"onclick="toggleMenu()">≡</div>
+
+ <div class="logo">TRIDENTS</div>
+  
+ <div class="icons">
+  <div class="icon">🔍</div>
+  <div class="icon">🛒</div>
+ </div>
+</header>
+
+<section class="hero">
+ <h1>NO EXCUSE</h1>
+</section>
+
+<section class="products">
+ <h2>人気商品</h2>
+
+ <div class="grid">
+  
+  <div class="card">
+   <img src="https://picsum.photos/300/300?1">
+   <h3>T-shirt</h3>
+   <p>¥4,980</p>
+   <button>カートに追加</button>
+  </div>
+
+  <div class="card">
+   <img src="https://picsum.photos/300/300?2">
+   <h3>Socks</h3>
+   <p>¥1,980</p>
+   <button>カートに追加</button>
+  </div>
+
+ </div>
+</section>
+
+<footer>
+ <p>6/14</p>
+</footer>
+
+<script>
+ function toggleMenu(){
+  document
+   .getElementById("menu")
+   .classList
+   .toggle("active");
+ }
+</script>
+
+</body>
+</html>
+
+
+ 
