@@ -1,112 +1,215 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>JavaScript TODOアプリ</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      padding: 40px;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript TODOアプリ</title>
 
-    h1 {
-      margin-bottom: 20px;
-    }
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    input {
-      padding: 10px;
-      width: 200px;
-    }
+body{
+  font-family:sans-serif;
+  background:#f5f5f5;
+  padding:50px 20px;
+  text-align:center;
+}
 
-    button {
-      padding: 10px 15px;
-      margin-left: 5px;
-      cursor: pointer;
-    }
+h1{
+  font-size:48px;
+  margin-bottom:40px;
+}
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 30px;
-    }
+.input-area{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-    li {
-      background: white;
-      padding: 10px;
-      margin: 10px auto;
-      width: 300px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 5px;
-    }
+input{
+  width:min(420px,100%);
+  padding:16px;
+  font-size:24px;
+  border:2px solid #ccc;
+  border-radius:10px;
+}
 
-    .done {
-      text-decoration: line-through;
-      color: gray;
-    }
-  </style>
+button{
+  padding:16px 24px;
+  font-size:20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+#addBtn{
+  background:#007bff;
+  color:#fff;
+}
+
+#addBtn:hover{
+  background:#0056b3;
+}
+
+ul{
+  list-style:none;
+  margin-top:40px;
+}
+
+li{
+  width:min(700px,100%);
+  margin:20px auto;
+  padding:20px;
+  background:#fff;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+li span{
+  flex:1;
+  text-align:left;
+  font-size:24px;
+  word-break:break-word;
+}
+
+.done{
+  text-decoration:line-through;
+  color:gray;
+}
+
+.done-btn{
+  background:#28a745;
+  color:#fff;
+  margin-left:10px;
+}
+
+.done-btn:hover{
+  background:#1f7f35;
+}
+
+.delete-btn{
+  background:#dc3545;
+  color:#fff;
+  margin-left:10px;
+}
+
+.delete-btn:hover{
+  background:#b52a37;
+}
+
+@media(max-width:768px){
+
+  h1{
+    font-size:36px;
+  }
+
+  input{
+    width:100%;
+    font-size:20px;
+  }
+
+  .input-area{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  #addBtn{
+    width:100%;
+    max-width:420px;
+  }
+
+  li{
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  li span{
+    width:100%;
+    margin-bottom:10px;
+    font-size:20px;
+  }
+
+  .done-btn,
+  .delete-btn{
+    flex:1;
+    margin-left:0;
+  }
+
+}
+</style>
 </head>
+
 <body>
 
-  <h1>📝 TODOアプリ</h1>
+<h1>📝 TODOアプリ</h1>
 
+<div class="input-area">
   <input type="text" id="todoInput" placeholder="やることを入力">
   <button id="addBtn">追加</button>
+</div>
 
-  <ul id="todoList"></ul>
+<ul id="todoList"></ul>
 
 <script>
-  const input = document.getElementById("todoInput");
-  const addBtn = document.getElementById("addBtn");
-  const list = document.getElementById("todoList");
+const input = document.getElementById("todoInput");
+const addBtn = document.getElementById("addBtn");
+const list = document.getElementById("todoList");
 
-  // TODO追加
-  addBtn.addEventListener("click", () => {
-    const text = input.value;
+function addTodo(){
 
-    if (text === "") {
-      alert("入力してください");
-      return;
-    }
+  const text = input.value.trim();
 
-    const li = document.createElement("li");
+  if(text === ""){
+    alert("入力してください");
+    return;
+  }
 
-    const span = document.createElement("span");
-    span.textContent = text;
+  const li = document.createElement("li");
 
-    const doneBtn = document.createElement("button");
-    doneBtn.textContent = "完了";
+  const span = document.createElement("span");
+  span.textContent = text;
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "削除";
+  const doneBtn = document.createElement("button");
+  doneBtn.textContent = "完了";
+  doneBtn.className = "done-btn";
 
-    // 完了
-    doneBtn.addEventListener("click", () => {
-      span.classList.toggle("done");
-    });
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "削除";
+  deleteBtn.className = "delete-btn";
 
-    // 削除
-    deleteBtn.addEventListener("click", () => {
-      li.remove();
-    });
-
-    li.appendChild(span);
-    li.appendChild(doneBtn);
-    li.appendChild(deleteBtn);
-
-    list.appendChild(li);
-    input.value = "";
+  doneBtn.addEventListener("click",()=>{
+    span.classList.toggle("done");
   });
 
-  // Enterキー対応
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      addBtn.click();
-    }
+  deleteBtn.addEventListener("click",()=>{
+    li.remove();
   });
+
+  li.appendChild(span);
+  li.appendChild(doneBtn);
+  li.appendChild(deleteBtn);
+
+  list.appendChild(li);
+
+  input.value = "";
+  input.focus();
+}
+
+addBtn.addEventListener("click", addTodo);
+
+input.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    addTodo();
+  }
+});
 </script>
 
 </body>
