@@ -1,215 +1,623 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JavaScript TODOアプリ</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODOアプリ</title>
+
+  <!-- アイコン -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
 
 <style>
+/* ===== リセット ===== */
+
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-  font-family:sans-serif;
-  background:#f5f5f5;
-  padding:50px 20px;
-  text-align:center;
+    font-family:sans-serif;
+    min-height:100vh;
+    background:linear-gradient(135deg,#dbeafe,#eef2ff,#f8fafc);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:40px 20px;
 }
 
-h1{
-  font-size:48px;
-  margin-bottom:40px;
+/* ===== メインカード ===== */
+
+.container{
+
+    width:100%;
+    max-width:1000px;
+
+    background:rgba(255,255,255,.8);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:30px;
+
+    padding:40px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
+
 }
+
+/* ===== タイトル ===== */
+
+header{
+
+    text-align:center;
+
+    margin-bottom:35px;
+
+}
+
+header h1{
+
+    font-size:48px;
+
+    color:#2563eb;
+
+    margin-bottom:10px;
+
+}
+
+header p{
+
+    font-size:20px;
+
+    color:#555;
+
+}
+
+/* ===== 入力欄 ===== */
 
 .input-area{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:25px;
+
 }
 
-input{
-  width:min(420px,100%);
-  padding:16px;
-  font-size:24px;
-  border:2px solid #ccc;
-  border-radius:10px;
+.input-area input{
+
+    flex:1;
+
+    padding:18px;
+
+    border:2px solid #d1d5db;
+
+    border-radius:16px;
+
+    font-size:20px;
+
+    outline:none;
+
+    transition:.3s;
+
 }
 
-button{
-  padding:16px 24px;
-  font-size:20px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  transition:.3s;
+.input-area input:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 10px rgba(37,99,235,.3);
+
 }
 
 #addBtn{
-  background:#007bff;
-  color:#fff;
+
+    background:#2563eb;
+
+    color:white;
+
 }
 
-#addBtn:hover{
-  background:#0056b3;
+button{
+
+    border:none;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    padding:18px 24px;
+
+    font-size:18px;
+
+    transition:.25s;
+
 }
 
-ul{
-  list-style:none;
-  margin-top:40px;
+button:hover{
+
+    transform:translateY(-3px);
+
 }
 
-li{
-  width:min(700px,100%);
-  margin:20px auto;
-  padding:20px;
-  background:#fff;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  box-shadow:0 3px 10px rgba(0,0,0,.1);
+/* ===== ボタン列 ===== */
+
+.menu{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:30px;
+
 }
 
-li span{
-  flex:1;
-  text-align:left;
-  font-size:24px;
-  word-break:break-word;
+.menu button{
+
+    flex:1;
+
+    color:white;
+
 }
+
+.green{
+
+    background:#22c55e;
+
+}
+
+.orange{
+
+    background:#f59e0b;
+
+}
+
+.purple{
+
+    background:#7c3aed;
+
+}
+
+/* ===== フィルター ===== */
+
+.filters{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.filters button{
+    background:#e5e7eb;
+    color:#333;
+    padding:12px 20px;
+    border-radius:12px;
+}
+
+.filters button.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+.count{
+    margin-left:auto;
+    font-size:18px;
+    font-weight:bold;
+    color:#444;
+}
+
+/* ===== タスクリスト ===== */
+
+#taskList{
+    list-style:none;
+}
+
+#taskList li{
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    background:white;
+
+    margin-bottom:18px;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+#taskList li:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.task-text{
+
+    flex:1;
+
+    font-size:20px;
+
+    word-break:break-word;
+
+}
+
+/* ===== 完了状態 ===== */
 
 .done{
-  text-decoration:line-through;
-  color:gray;
+
+    text-decoration:line-through;
+
+    color:#888;
+
+    opacity:.7;
+
 }
+
+/* ===== ボタン ===== */
 
 .done-btn{
-  background:#28a745;
-  color:#fff;
-  margin-left:10px;
+
+    background:#22c55e;
+
+    color:white;
+
 }
 
-.done-btn:hover{
-  background:#1f7f35;
+.edit-btn{
+
+    background:#3b82f6;
+
+    color:white;
+
 }
 
 .delete-btn{
-  background:#dc3545;
-  color:#fff;
-  margin-left:10px;
+
+    background:#ef4444;
+
+    color:white;
+
 }
 
-.delete-btn:hover{
-  background:#b52a37;
+/* ===== アニメーション ===== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
 }
+
+#taskList li{
+
+    animation:fadeIn .3s ease;
+
+}
+
+/* ===== スマホ対応 ===== */
 
 @media(max-width:768px){
 
-  h1{
-    font-size:36px;
-  }
+.container{
 
-  input{
-    width:100%;
-    font-size:20px;
-  }
+padding:25px;
 
-  .input-area{
-    flex-direction:column;
-    align-items:center;
-  }
+}
 
-  #addBtn{
-    width:100%;
-    max-width:420px;
-  }
+header h1{
 
-  li{
-    flex-wrap:wrap;
-    gap:10px;
-  }
+font-size:34px;
 
-  li span{
-    width:100%;
-    margin-bottom:10px;
-    font-size:20px;
-  }
+}
 
-  .done-btn,
-  .delete-btn{
-    flex:1;
-    margin-left:0;
-  }
+header p{
+
+font-size:16px;
+
+}
+
+.input-area{
+
+flex-direction:column;
+
+}
+
+.input-area input{
+
+width:100%;
+
+font-size:18px;
+
+}
+
+#addBtn{
+
+width:100%;
+
+}
+
+.menu{
+
+flex-direction:column;
+
+}
+
+.filters{
+
+flex-direction:column;
+
+align-items:stretch;
+
+}
+
+.count{
+
+margin-left:0;
+
+text-align:center;
+
+}
+
+#taskList li{
+
+flex-direction:column;
+
+align-items:stretch;
+
+}
+
+.task-text{
+
+text-align:center;
+
+margin-bottom:10px;
+
+}
+
+.done-btn,
+.edit-btn,
+.delete-btn{
+
+width:100%;
+
+margin-top:8px;
+
+}
 
 }
 </style>
-</head>
 
 <body>
 
-<h1>📝 TODOアプリ</h1>
+<div class="container">
 
-<div class="input-area">
-  <input type="text" id="todoInput" placeholder="やることを入力">
-  <button id="addBtn">追加</button>
+  <header>
+    <h1><i class="fa-solid fa-clipboard-check"></i> TODOアプリ</h1>
+    <p>タスクを管理して効率アップ！</p>
+  </header>
+
+  <div class="input-area">
+    <input
+      type="text"
+      id="taskInput"
+      placeholder="やることを入力してください..."
+    >
+
+    <button id="addBtn">
+      <i class="fa-solid fa-plus"></i>
+      追加
+    </button>
+  </div>
+
+  <div class="menu">
+
+    <button id="apiBtn" class="green">
+      <i class="fa-solid fa-cloud-arrow-down"></i>
+      API取得
+    </button>
+
+    <button id="weatherBtn" class="orange">
+      <i class="fa-solid fa-sun"></i>
+      天気
+    </button>
+
+    <button id="deleteAllBtn" class="purple">
+      <i class="fa-solid fa-trash"></i>
+      全削除
+    </button>
+
+  </div>
+
+  <div class="filters">
+
+    <button data-filter="all" class="active">
+      すべて
+    </button>
+
+    <button data-filter="todo">
+      未完了
+    </button>
+
+    <button data-filter="done">
+      完了
+    </button>
+
+    <div class="count">
+      タスク数：
+      <span id="count">0</span>
+    </div>
+
+  </div>
+
+  <ul id="taskList"></ul>
+
 </div>
 
-<ul id="todoList"></ul>
+<script src="script.js"></script>
+
+</body>
 
 <script>
-const input = document.getElementById("todoInput");
+
+// ===== 要素取得 =====
+
+const input = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
-const list = document.getElementById("todoList");
+const taskList = document.getElementById("taskList");
+const count = document.getElementById("count");
 
-function addTodo(){
+// ===== タスク配列 =====
 
-  const text = input.value.trim();
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-  if(text === ""){
-    alert("入力してください");
-    return;
-  }
+// ===== 保存 =====
 
-  const li = document.createElement("li");
-
-  const span = document.createElement("span");
-  span.textContent = text;
-
-  const doneBtn = document.createElement("button");
-  doneBtn.textContent = "完了";
-  doneBtn.className = "done-btn";
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "削除";
-  deleteBtn.className = "delete-btn";
-
-  doneBtn.addEventListener("click",()=>{
-    span.classList.toggle("done");
-  });
-
-  deleteBtn.addEventListener("click",()=>{
-    li.remove();
-  });
-
-  li.appendChild(span);
-  li.appendChild(doneBtn);
-  li.appendChild(deleteBtn);
-
-  list.appendChild(li);
-
-  input.value = "";
-  input.focus();
+function saveTasks(){
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-addBtn.addEventListener("click", addTodo);
+// ===== 件数更新 =====
 
+function updateCount(){
+    count.textContent = tasks.length;
+}
+
+// ===== 画面更新 =====
+
+function renderTasks(){
+
+    taskList.innerHTML = "";
+
+    tasks.forEach((task,index)=>{
+
+        const li = document.createElement("li");
+
+        const span = document.createElement("span");
+        span.className = "task-text";
+        span.textContent = task.text;
+
+        if(task.done){
+            span.classList.add("done");
+        }
+
+        // 完了ボタン
+        const doneBtn = document.createElement("button");
+        doneBtn.textContent = "✓";
+        doneBtn.className = "done-btn";
+
+        doneBtn.addEventListener("click",()=>{
+
+            tasks[index].done = !tasks[index].done;
+
+            saveTasks();
+
+            renderTasks();
+
+        });
+
+        // 削除ボタン
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "削除";
+        deleteBtn.className = "delete-btn";
+
+        deleteBtn.addEventListener("click",()=>{
+
+            tasks.splice(index,1);
+
+            saveTasks();
+
+            renderTasks();
+
+        });
+
+        li.appendChild(span);
+        li.appendChild(doneBtn);
+        li.appendChild(deleteBtn);
+
+        taskList.appendChild(li);
+
+    });
+
+    updateCount();
+
+}
+
+// ===== タスク追加 =====
+
+function addTask(){
+
+    const text = input.value.trim();
+
+    if(text===""){
+
+        alert("入力してください");
+
+        return;
+
+    }
+
+    tasks.push({
+
+        text:text,
+
+        done:false
+
+    });
+
+    saveTasks();
+
+    renderTasks();
+
+    input.value="";
+
+    input.focus();
+
+}
+
+// ボタンクリック
+addBtn.addEventListener("click",addTask);
+
+// Enterキー
 input.addEventListener("keydown",(e)=>{
-  if(e.key==="Enter"){
-    addTodo();
-  }
+
+    if(e.key==="Enter"){
+
+        addTask();
+
+    }
+
 });
+
+// 初回表示
+renderTasks();
+
 </script>
 
 </body>
