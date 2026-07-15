@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スマホテトリス</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#111;
+    color:white;
+    font-family:sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    overflow:hidden;
+}
+
+h2{
+    margin:4px;
+    font-size:28px;
+}
+
+canvas{
+    background:black;
+    border:3px solid white;
+    max-width:95vw;
+}
+
+.controls{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:repeat(3,80px);
+    gap:10px;
+}
+
+button{
+    width:65px;
+    height:65px;
+    font-size:26px;
+    border:none;
+    border-radius:15px;
+    background:#333;
+    color:white;
+    touch-action:manipulation;
+}
+
+button:active{
+    transform:scale(0.95);
+}
+
+#startScreen{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#111;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+#startScreen h1{
+    font-size:48px;
+    margin-bottom:30px;
+}
+
+#startBtn{
+    width:220px;
+    height:80px;
+    font-size:32px;
+    background:#00cc66;
+    color:white;
+    border:none;
+    border-radius:15px;
+}
+
+
+.gameArea{
+    display:flex;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.sidePanel{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.sidePanel h3{
+    margin-bottom:10px;
+}
+
+#next{
+    width:120px;
+    height:120px;
+}
+
+#pause{
+    width:220px;
+    height:50px;
+    margin-top:8px;
+    font-size:22px;
+    background:#ff9800;
+    color:white;
+    border:none;
+    border-radius:15px;
+}
+
+
+.gameArea{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    transform:scale(0.85);
+    transform-origin:top center;
+}
+
+.controls{
+    margin-top:0;
+    transform:scale(0.85);
+}
+
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+    <h1>テトリス</h1>
+    <button id="startBtn">▶ START</button>
+</div>
+
+<h2>テトリス</h2>
+
+
+<div class="gameArea">
+
+    <canvas id="game" width="300" height="600"></canvas>
+
+    <div class="sidePanel">
+        <h3>NEXT</h3>
+        <canvas id="next" width="120" height="120"></canvas>
+    </div>
+
+</div>
+
+<div class="controls">
+    <div></div>
+    <button id="rotate">🔄</button>
+    <div></div>
+
+    <button id="left">⬅️</button>
+    <button id="down">⬇️</button>
+    <button id="right">➡️</button>
+　　
+</div>
+
+<button id="pause">⏸ ポーズ</button>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const COLS = 10;
+const ROWS = 20;
+const SIZE = 30;
+
+const board = Array.from({length:ROWS},()=>
+ Array(COLS).fill(0)
+);
+
+const colors = [
+ null,
+ "#00ffff",
+ "#0000ff",
+ "#ff8800",
+ "#ffff00",
+ "#00ff00",
+ "#aa00ff",
+ "#ff0000"
+];
+
+const pieces = [
+ [],
+ [[1,1,1,1]],
+ [[2,0,0],[2,2,2]],
+ [[0,0,3],[3,3,3]],
+ [[4,4],[4,4]],
+ [[0,5,5],[5,5,0]],
+ [[0,6,0],[6,6,6]],
+ [[7,7,0],[0,7,7]]
+];
+
+function createPiece(){
+ const type = Math.floor(Math.random()*7)+1;
+
+ return {
+  shape: pieces[type],
+  color:type,
+  x:3,
+  y:0
+ };
+}
+
+let nextPiece = createPiece();
+
+let player = nextPiece;
+player.x = 3;
+player.y = 0;
+
+nextPiece = createPiece();
+
+
+function drawCell(x,y,color){
+ ctx.fillStyle=color;
+ ctx.fillRect(
+  x*SIZE,
+  y*SIZE,
+  SIZE,
+  SIZE
+ );
+
+ ctx.strokeStyle="#222";
+ ctx.strokeRect(
+  x*SIZE,
+  y*SIZE,
+  SIZE,
+  SIZE
+ );
+}
+
+function draw(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ board.forEach((row,y)=>{
+  row.forEach((value,x)=>{
+   if(value){
+    drawCell(
+     x,
+     y,
+     colors[value]
+    );
+   }
+  });
+ });
+
+ player.shape.forEach((row,y)=>{
+  row.forEach((value,x)=>{
+   if(value){
+    drawCell(
+     player.x+x,
+     player.y+y,
+     colors[player.color]
+    );
+   }
+  });
+ });
+
+drawNext();
+
+if(isPaused){
+
+    ctx.fillStyle="rgba(0,0,0,0.6)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle="white";
+    ctx.font="40px sans-serif";
+    ctx.textAlign="center";
+    ctx.fillText("PAUSE",canvas.width/2,canvas.height/2);
+
+}
+}
+
+function collide(){
+ for(let y=0;y<player.shape.length;y++){
+  for(let x=0;x<player.shape[y].length;x++){
+
+   if(
+    player.shape[y][x] &&
+    (
+     board[player.y+y]===undefined ||
+     board[player.y+y][player.x+x]===undefined ||
+     board[player.y+y][player.x+x]
+    )
+   ){
+    return true;
+   }
+  }
+ }
+ return false;
+}
+
+function merge(){
+ player.shape.forEach((row,y)=>{
+  row.forEach((value,x)=>{
+   if(value){
+    board[player.y+y][player.x+x]=player.color;
+   }
+  });
+ });
+}
+
+function clearLines(){
+ for(let y=ROWS-1;y>=0;y--){
+
+  if(board[y].every(v=>v!==0)){
+
+   board.splice(y,1);
+
+   board.unshift(
+    Array(COLS).fill(0)
+   );
+
+   y++;
+  }
+ }
+}
+
+function rotate(){
+ const rotated=
+ player.shape[0].map((_,i)=>
+  player.shape.map(row=>row[i]).reverse()
+ );
+
+ const old=player.shape;
+
+ player.shape=rotated;
+
+ if(collide()){
+  player.shape=old;
+ }
+}
+
+function moveLeft(){
+ player.x--;
+ if(collide()) player.x++;
+}
+
+function moveRight(){
+ player.x++;
+ if(collide()) player.x--;
+}
+
+function drop(){
+
+ player.y++;
+
+ if(collide()){
+
+  player.y--;
+
+  merge();
+
+  clearLines();
+
+  player = nextPiece;
+player.x = 3;
+player.y = 0;
+
+nextPiece = createPiece();
+
+drawNext();
+
+  if(collide()){
+
+   alert("リセット");
+
+   location.reload();
+  }
+ }
+}
+
+document
+.getElementById("left")
+.addEventListener("click",()=>{
+ moveLeft();
+ draw();
+});
+
+document
+.getElementById("right")
+.addEventListener("click",()=>{
+ moveRight();
+ draw();
+});
+
+document
+.getElementById("rotate")
+.addEventListener("click",()=>{
+ rotate();
+ draw();
+});
+
+document
+.getElementById("down")
+.addEventListener("click",()=>{
+ drop();
+ draw();
+});
+
+document.addEventListener("keydown",(e)=>{
+
+ if(e.key==="ArrowLeft"){
+  moveLeft();
+ }
+
+ if(e.key==="ArrowRight"){
+  moveRight();
+ }
+
+ if(e.key==="ArrowUp"){
+  rotate();
+ }
+
+ if(e.key==="ArrowDown"){
+  drop();
+ }
+
+ draw();
+});
+
+let touchStartX=0;
+let touchStartY=0;
+
+canvas.addEventListener("touchstart",(e)=>{
+ touchStartX=e.touches[0].clientX;
+ touchStartY=e.touches[0].clientY;
+});
+
+canvas.addEventListener("touchend",(e)=>{
+
+ const touchX=e.changedTouches[0].clientX;
+ const touchY=e.changedTouches[0].clientY;
+
+ const dx=touchX-touchStartX;
+ const dy=touchY-touchStartY;
+
+ if(Math.abs(dx)>Math.abs(dy)){
+
+  if(dx>30){
+   moveRight();
+  }else if(dx<-30){
+   moveLeft();
+  }
+
+ }else{
+
+  if(dy>30){
+   drop();
+  }else if(dy<-30){
+   rotate();
+  }
+ }
+
+ draw();
+});
+
+
+let gameLoop = null;
+
+let isPaused = false;
+
+
+document.getElementById("startBtn").addEventListener("click",()=>{
+
+    document.getElementById("startScreen").style.display="none";
+
+    if(gameLoop) clearInterval(gameLoop);
+
+    gameLoop = setInterval(()=>{
+        drop();
+        draw();
+    },500);
+
+});
+
+
+
+const nextCanvas = document.getElementById("next");
+const nextCtx = nextCanvas.getContext("2d");
+
+
+function drawNext(){
+
+    nextCtx.clearRect(0,0,nextCanvas.width,nextCanvas.height);
+
+    nextPiece.shape.forEach((row,y)=>{
+        row.forEach((value,x)=>{
+
+            if(value){
+
+                nextCtx.fillStyle = colors[nextPiece.color];
+
+                nextCtx.fillRect(
+                    x*30+15,
+                    y*30+15,
+                    28,
+                    28
+                );
+
+                nextCtx.strokeStyle="#222";
+
+                nextCtx.strokeRect(
+                    x*30+15,
+                    y*30+15,
+                    28,
+                    28
+                );
+
+            }
+
+        });
+    });
+
+}
+
+
+draw();
+drawNext();
+
+
+
+document.getElementById("pause").addEventListener("click",()=>{
+
+    if(!isPaused){
+
+        clearInterval(gameLoop);
+        isPaused = true;
+        document.getElementById("pause").textContent = "▶ 再開";
+draw();
+
+    }else{
+
+        gameLoop = setInterval(()=>{
+            drop();
+            draw();
+        },500);
+
+        isPaused = false;
+        document.getElementById("pause").textContent = "⏸ ポーズ";
+draw();
+    }
+
+});
+
+
+
+
+
+</script>
+
+</body>
+</html>
