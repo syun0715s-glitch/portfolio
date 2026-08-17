@@ -1,0 +1,339 @@
+import { useState, useEffect } from "react";
+import { Todo } from "@/types/todo";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+import TodoItem from "../TodoItem";
+
+
+
+  import {
+    Rocket,
+    ArrowRight,
+  } from "lucide-react";
+  
+
+
+
+export default function Home() {
+
+ 
+  const [text, setText] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+    
+
+  
+
+  const [search, setSearch] = useState("");
+
+  const [filter, setFilter] = useState<
+  "すべて" | "未完了" | "完了"
+  >("すべて");
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  const [deadline, setDeadline] = useState("");
+
+  const [priority, setPriority] =
+  useState<"高" | "中" | "低">("中");
+
+  const [tag, setTag] = useState("");
+
+  useEffect(() => {
+    fetch("/api/todos")
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos(data);
+      })
+      .catch((error) => {
+        console.error("APIエラー:", error);
+      });
+  }, []);
+  
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  const deleteTodo = async (id: number) => {
+    await fetch(`/api/todos/${id}`, {
+      method: "DELETE",
+    });
+
+    setTodos(
+      todos.filter((todo) => todo.id !== id)
+    );
+  };
+
+  const updateTodo = async (id: number, text: string) => {
+    const res = await fetch(`/api/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: text,
+      }),
+    });
+
+    const updatedTodo = await res.json();
+
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? updatedTodo : todo
+      )
+    );
+  };
+
+
+  const total = todos.length;
+  const completed = todos.filter(todo => todo.completed).length;
+  const uncompleted = todos.filter(todo => !todo.completed).length;
+
+  const today = new Date()
+    .toISOString()
+    .split("T")[0];
+
+
+  const overdue = todos.filter(
+    todo =>
+      !todo.completed &&
+      todo.deadline &&
+      todo.deadline < today
+  ).length;
+
+  const sortedTodos = [...todos].sort((a, b) => {
+    const rank = {
+      "高": 1,
+      "中": 2,
+      "低": 3
+    };
+
+    return rank[a.priority] - rank[b.priority];
+  });
+
+  return (
+    <div
+      className={
+        darkMode
+        ? "bg-black text-white min-h-screen"
+        : "min-h-screen" 
+      }
+      > 
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-background pt-24 pb-32">
+        {/* Background Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-30 blur-[100px]"></div>
+
+        <div className="container relative z-10 mx-auto px-4 md:px-6 flex flex-col items-center text-center">
+          <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <Rocket className="mr-2 h-4 w-4" />
+            <span>Ready for production</span>
+          </div>
+
+          <h1 className="max-w-4xl text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl text-foreground animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+            学習スタート
+          </h1>
+          <div className="mt-10">
+            <h2 className="text-3xl font-bold mb-4">
+              React ToDo
+            </h2>
+
+            <Button
+              onClick={() => setDarkMode(!darkMode)}
+            >
+              {darkMode ? "☀️ ライト" : "🌙 ダーク"}
+            </Button>
+
+            <div className="mt-4 w-full max-w-md mx-auto space-y-3">
+
+              <input
+                className="w-full border p-3 rounded text-black"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="やることを入力"
+              />
+
+              <input
+                type="date"
+                className="w-full border p-3 rounded text-black"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+
+              <input
+                className="w-full border p-3 rounded text-black"
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+                placeholder="タグ"
+              />
+
+              <select
+                className="w-full border p-3 rounded text-black"
+                value={priority}
+                onChange={(e) =>
+                  setPriority(e.target.value as "高" | "中" | "低")
+                }
+              >
+                <option>高</option>
+                <option>中</option>
+                <option>低</option>
+              </select>
+
+              <Button
+                className="w-full"
+                onClick={async () => {
+                  if (!text.trim()) return;
+
+                  const res = await fetch("/api/todos", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      text: text,
+                      deadline: deadline,
+                      priority: priority,
+                      tag: tag,
+                      completed: false,
+                      completedAt: "",
+                    }),
+                  });
+
+                  const newTodo = await res.json();
+
+                  setTodos([...todos, newTodo]);
+
+                  setText("");
+                  setDeadline("");
+                  setTag("");
+                  setPriority("中");
+                }}
+              >
+                追加
+              </Button>
+
+            </div>
+            
+            <input
+            className="border p-2 rounded text-black mt-4"
+            placeholder="検索..."
+            value={search}
+            onChange={(e)=>setSearch(e.target.value)}
+            />
+
+            <div className="flex justify-center gap-2 mt-4">
+
+            <Button
+            onClick={()=>setFilter("すべて")}
+            >
+            すべて
+            </Button>
+
+            <Button
+            onClick={()=>setFilter("未完了")}
+            >
+            未完了
+            </Button>
+
+            <Button
+            onClick={()=>setFilter("完了")}
+            >
+            完了
+            </Button>
+
+            </div>
+
+            <div className="mt-4">
+              <p>全体：{total}件</p>
+              <p>未完了：{uncompleted}件</p>
+              <p>完了：{completed}件</p>
+
+              <p className="text-red-500 font-bold">
+                期限切れ：{overdue}件
+              </p>
+            </div>
+
+              <ul className="mt-6 w-full max-w-md mx-auto space-y-3">
+              {sortedTodos
+                .filter((todo)=> {
+
+              const filterOK =
+              filter === "すべて" ||
+              (filter === "完了" &&      todo.completed) ||
+              (filter === "未完了" && !todo.completed);
+
+                  const searchOK =
+                    todo.text.includes(search) ||
+todo.tag.includes(search);
+                  return filterOK && searchOK;
+                })
+                .map((todo)=>(
+
+
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    deleteTodo={deleteTodo}
+                    updateTodo={updateTodo}
+                    toggleTodo={async (id) => {
+                      const todo = todos.find((t) => t.id === id);
+
+                      if (!todo) return;
+
+                      const updatedTodo = {
+                        ...todo,
+                        completed: !todo.completed,
+                        completedAt: !todo.completed
+                          ? new Date().toLocaleString()
+                          : "",
+                      };
+
+                      await fetch(`/api/todos/${id}`, {
+                        method: "PUT",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(updatedTodo),
+                      });
+
+                      setTodos(
+                        todos.map((t) =>
+                          t.id === id ? updatedTodo : t
+                        )
+                      );
+                    }}
+                    
+                  />
+              ))}
+
+            </ul>
+          </div>
+          
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+            A meticulously crafted React starter template powered by Vite. 
+            Everything you need to build fast, scalable web applications with a world-class developer experience.
+          </p>
+
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
+            <Button size="lg" asChild className="group font-semibold text-base h-12 px-8 shadow-lg shadow-primary/20">
+              <Link href="/about">
+                Explore the Stack
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild className="font-semibold text-base h-12 px-8 bg-background/50 backdrop-blur-sm">
+              <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
+                Read Vite Docs
+              </a>
+            </Button>
+          </div>
+        </div>
+
+      </section>
+        
+    </div>
+  );
+}
+
+
