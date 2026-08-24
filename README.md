@@ -1,102 +1,74 @@
-# snapval
+# React Todo App
 
-> ⚡ Lightweight, type-safe validation library for JavaScript & TypeScript
+React + TypeScriptで制作したTodo管理アプリです。
 
-[![npm version](https://img.shields.io/npm/v/snapval)](https://www.npmjs.com/package/snapval)
-[![license](https://img.shields.io/npm/l/snapval)](./LICENSE)
-[![types](https://img.shields.io/npm/types/snapval)](https://www.typescriptlang.org/)
+## 🔗 Demo
 
----
+[Todoアプリを開く](https://vite-react-setup--syun0715s.replit.app/)
 
-## Features
+## 📱 主な機能
 
-- 🔒 Full TypeScript support with inferred types
-- 🪶 Zero dependencies, ~2KB minified
-- 🔗 Chainable, composable validators
-- 💬 Customizable error messages
+- Todoの追加
+- Todoの編集
+- Todoの削除
+- 完了・未完了の切り替え
+- Todo検索
+- 完了・未完了フィルター
+- 優先度管理（高・中・低）
+- 期限管理
+- 期限切れ表示
+- タグ管理
+- ダークモード
+- レスポンシブ対応
 
----
+## 🛠 使用技術
 
-## Installation
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Express
+- REST API
+- Git / GitHub
+- Replit
 
-```bash
-npm install snapval
-# or
-yarn add snapval
-# or
-pnpm add snapval
-```
+## 💡 開発内容
 
----
+React + TypeScriptを使用してTodo管理アプリを制作しました。
 
-## Usage
+Expressで構築したAPIとReactを連携し、
+Todoの追加・編集・削除・更新を実装しています。
 
-```ts
-import { v } from 'snapval'
+また、検索・フィルター・優先度・期限・タグなどの機能を追加し、
+実用性を意識して開発しました。
 
-const schema = v.object({
-  name: v.string().min(1),
-  age:  v.number().min(0).max(120),
-  email: v.string().email(),
-})
+スマートフォンでも利用できるよう、
+レスポンシブ対応も行っています。
 
-const result = schema.parse({
-  name: 'Alice',
-  age: 30,
-  email: 'alice@example.com',
-})
+## 🎯 制作目的
 
-console.log(result) // { name: 'Alice', age: 30, email: 'alice@example.com' }
-```
+React、TypeScript、API通信などの
+フロントエンド開発スキルを実践的に身につけることを目的として制作しました。
 
-### Safe parse (no throw)
+今後も機能追加やUI改善を行い、
+実務レベルのアプリ開発につなげていきます。
 
-```ts
-const result = schema.safeParse(input)
+## 📚 学んだこと
 
-if (result.success) {
-  console.log(result.data)
-} else {
-  console.error(result.errors)
-}
-```
+- Reactのコンポーネント設計
+- useState / useEffectの使い方
+- TypeScriptによる型定義
+- REST APIとの通信
+- CRUD処理
+- 非同期処理
+- Git / GitHubの使い方
+- Webアプリの公開
+- レスポンシブデザイン
 
----
+## 🚀 今後の改善
 
-## API
-
-| Validator | Methods |
-|-----------|---------|
-| `v.string()` | `.min(n)` `.max(n)` `.email()` `.url()` `.regex(r)` |
-| `v.number()` | `.min(n)` `.max(n)` `.int()` `.positive()` |
-| `v.boolean()` | — |
-| `v.array(schema)` | `.min(n)` `.max(n)` |
-| `v.object(shape)` | `.partial()` `.pick(keys)` |
-| `v.union(schemas)` | — |
-| `v.optional(schema)` | — |
-
----
-
-## Requirements
-
-- Node.js 16+
-- TypeScript 4.7+ (optional)
-
----
-
-## Contributing
-
-```bash
-git clone https://github.com/your-org/snapval
-cd snapval
-npm install
-npm test
-```
-
-Pull requests are welcome! Please open an issue first for major changes.
-
----
-
-## License
-
-[MIT](./LICENSE)
+- ユーザー認証
+- データベースへの保存
+- Firebase連携
+- より高度なUI/UX改善
+- テストコードの追加
