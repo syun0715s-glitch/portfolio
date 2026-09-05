@@ -1,0 +1,2876 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AOKICKS | Basketball Store</title>
+
+<style>
+
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#fff;
+  color:#111;
+  line-height:1.6;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  display:block;
+  width:100%;
+  padding:13px 20px;
+  margin-top:10px;
+  background:#111;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  opacity:.8;
+}
+
+.btn-white{
+  background:#fff;
+  color:#111;
+  border:1px solid #ccc;
+}
+
+/* HEADER */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:2000;
+
+  height:70px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 25px;
+
+  background:#fff;
+  border-bottom:1px solid #ddd;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+  letter-spacing:2px;
+}
+
+.icons{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.icon{
+  position:relative;
+  font-size:23px;
+  cursor:pointer;
+  user-select:none;
+}
+
+#cartCount{
+  position:absolute;
+  top:-8px;
+  right:-10px;
+
+  width:20px;
+  height:20px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:red;
+  color:#fff;
+
+  border-radius:50%;
+
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* MENU */
+
+.menu{
+  position:fixed;
+
+  top:0;
+  left:0;
+
+  width:280px;
+  height:100vh;
+
+  background:#fff;
+
+  transform:translateX(-100%);
+
+  transition:.3s;
+
+  z-index:3000;
+
+  box-shadow:0 0 25px rgba(0,0,0,.2);
+
+  padding-top:80px;
+}
+
+.menu.active{
+  transform:translateX(0);
+}
+
+.menu h2{
+  padding:20px;
+  border-bottom:1px solid #ddd;
+}
+
+.menu a{
+  display:block;
+  padding:18px 25px;
+
+  color:#111;
+  text-decoration:none;
+
+  border-bottom:1px solid #eee;
+}
+
+.menu a:hover{
+  background:#111;
+  color:#fff;
+}
+
+/* OVERLAY */
+
+.overlay{
+  position:fixed;
+  inset:0;
+
+  background:rgba(0,0,0,.5);
+
+  display:none;
+
+  z-index:2500;
+}
+
+.overlay.active{
+  display:block;
+}
+
+/* SEARCH */
+
+.search-box{
+  position:fixed;
+
+  top:70px;
+  left:0;
+
+  width:100%;
+
+  padding:15px 20px;
+
+  background:#fff;
+
+  border-bottom:1px solid #ddd;
+
+  transform:translateY(-150%);
+
+  transition:.3s;
+
+  z-index:1900;
+}
+
+.search-box.active{
+  transform:translateY(0);
+}
+
+.search-box input{
+  width:100%;
+  max-width:800px;
+
+  display:block;
+  margin:auto;
+
+  padding:14px;
+
+  border:1px solid #ccc;
+  outline:none;
+
+  font-size:16px;
+}
+
+/* HERO */
+
+.hero{
+  height:500px;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,.35),
+      rgba(0,0,0,.35)
+    ),
+    url("https://picsum.photos/1600/700?1")
+    center/cover;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+
+  color:#fff;
+}
+
+.hero-content{
+  padding:20px;
+}
+
+.hero h1{
+  font-size:55px;
+  letter-spacing:4px;
+}
+
+.hero p{
+  margin-top:15px;
+  font-size:18px;
+}
+
+.hero button{
+  width:auto;
+  margin:25px auto 0;
+}
+
+/* PRODUCTS */
+
+.products{
+  max-width:1200px;
+  margin:auto;
+  padding:80px 20px;
+}
+
+.section-title{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:35px;
+}
+
+/* FILTER */
+
+.filter-area{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+
+  margin-bottom:40px;
+}
+
+.filter-area select,
+.filter-area input{
+  padding:12px 15px;
+  border:1px solid #ccc;
+  background:#fff;
+}
+
+.filter-area input{
+  width:250px;
+}
+
+/* GRID */
+
+/* GRID */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:25px;
+}
+
+.card{
+  border:1px solid #e5e5e5;
+  background:#fff;
+  padding:10px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 30px rgba(0,0,0,.10);
+}
+
+.card-image{
+  overflow:hidden;
+  position:relative;
+  background:#f5f5f5;
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  display:block;
+  transition:.4s;
+}
+
+.card:hover img{
+  transform:scale(1.06);
+}
+
+.card-info{
+  padding:16px 8px 8px;
+  text-align:left;
+}
+
+.card h3{
+  font-size:17px;
+  margin-bottom:5px;
+  font-weight:bold;
+}
+
+.category{
+  color:#888;
+  font-size:12px;
+}
+
+.price{
+  font-weight:bold;
+  font-size:19px;
+  margin-top:7px;
+}
+
+.stock{
+  font-size:12px;
+  margin-top:5px;
+  color:#777;
+}
+
+.stock.out{
+  color:red;
+  font-weight:bold;
+}
+
+.favorite-button{
+  background:#fff;
+  color:#111;
+  border:1px solid #ddd;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+
+  box-shadow:
+    0 10px 30px
+    rgba(0,0,0,.12);
+}
+
+.card-image{
+  overflow:hidden;
+  position:relative;
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+
+  object-fit:cover;
+  display:block;
+
+  transition:.3s;
+}
+
+.card:hover img{
+  transform:scale(1.05);
+}
+
+.card-info{
+  padding:15px 5px 5px;
+  text-align:center;
+}
+
+.card h3{
+  font-size:18px;
+  margin-bottom:7px;
+}
+
+.category{
+  color:#777;
+  font-size:13px;
+}
+
+.price{
+  font-weight:bold;
+  font-size:17px;
+  margin-top:5px;
+}
+
+.stock{
+  font-size:13px;
+  margin-top:5px;
+}
+
+.stock.out{
+  color:red;
+  font-weight:bold;
+}
+
+.favorite-button{
+  background:#fff;
+  color:#111;
+  border:1px solid #ddd;
+}
+
+/* BADGE */
+
+.badge{
+  position:absolute;
+
+  top:10px;
+  left:10px;
+
+  background:#111;
+  color:#fff;
+
+  padding:5px 9px;
+
+  font-size:12px;
+}
+
+/* ACTION */
+
+.action-buttons{
+  display:flex;
+
+  justify-content:center;
+
+  gap:15px;
+
+  max-width:700px;
+
+  margin:0 auto 80px;
+
+  padding:0 20px;
+}
+
+.action-buttons button{
+  width:auto;
+  min-width:200px;
+}
+
+/* FOOTER */
+
+footer{
+  background:#111;
+  color:#fff;
+
+  text-align:center;
+
+  padding:50px 20px;
+}
+
+footer h2{
+  margin-bottom:10px;
+}
+
+footer p{
+  color:#aaa;
+}
+
+/* PAGE */
+
+.page{
+  max-width:900px;
+  margin:auto;
+  padding:50px 20px;
+}
+
+.page h1{
+  margin-bottom:30px;
+}
+
+/* CART */
+
+.cart-item{
+  display:flex;
+
+  align-items:center;
+
+  gap:20px;
+
+  padding:20px 0;
+
+  border-bottom:1px solid #ddd;
+}
+
+.cart-item img{
+  width:110px;
+  height:110px;
+
+  object-fit:cover;
+}
+
+.cart-info{
+  flex:1;
+}
+
+.quantity{
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-top:10px;
+}
+
+.quantity button{
+  width:40px;
+  margin:0;
+  padding:8px;
+}
+
+.remove-button{
+  width:80px !important;
+  background:#d00;
+}
+
+.cart-total{
+  display:flex;
+
+  justify-content:space-between;
+
+  font-size:25px;
+
+  font-weight:bold;
+
+  margin-top:30px;
+}
+
+/* DETAIL */
+
+.product-detail{
+  max-width:1000px;
+
+  margin:auto;
+  padding:50px 20px;
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:50px;
+}
+
+.product-detail img{
+  width:100%;
+}
+
+.product-detail h1{
+  font-size:35px;
+  margin-bottom:10px;
+}
+
+.product-price{
+  font-size:25px;
+  font-weight:bold;
+
+  margin:15px 0;
+}
+
+.product-description{
+  margin-bottom:20px;
+  color:#555;
+}
+
+/* STARS */
+
+.rating{
+  font-size:25px;
+  letter-spacing:3px;
+
+  margin:10px 0;
+}
+
+.rating-text{
+  font-size:14px;
+  color:#777;
+}
+
+/* DETAIL STOCK */
+
+.detail-stock{
+  margin:15px 0;
+
+  font-weight:bold;
+}
+
+.detail-stock.low{
+  color:#d00;
+}
+
+/* QUANTITY SELECT */
+
+.quantity-select{
+  display:flex;
+  align-items:center;
+
+  gap:15px;
+
+  margin:20px 0;
+}
+
+.quantity-select label{
+  font-weight:bold;
+}
+
+.quantity-select input{
+  width:80px;
+  padding:10px;
+
+  border:1px solid #ccc;
+
+  text-align:center;
+}
+
+/* FORM */
+
+.form-group{
+  margin-bottom:20px;
+}
+
+.form-group label{
+  display:block;
+
+  margin-bottom:7px;
+
+  font-weight:bold;
+}
+
+.form-group input,
+.form-group select{
+  width:100%;
+
+  padding:13px;
+
+  border:1px solid #ccc;
+
+  outline:none;
+}
+
+/* FAVORITES */
+
+.favorite-card{
+  border:1px solid #ddd;
+
+  padding:20px;
+
+  margin-bottom:20px;
+
+  text-align:center;
+}
+
+.favorite-card img{
+  width:100%;
+
+  max-width:300px;
+
+  margin:15px auto;
+
+  display:block;
+}
+
+/* EMPTY */
+
+.empty{
+  text-align:center;
+
+  padding:60px 20px;
+
+  color:#777;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .hero{
+    height:400px;
+  }
+
+  .hero h1{
+    font-size:40px;
+  }
+
+  .product-detail{
+    grid-template-columns:1fr;
+    gap:25px;
+  }
+
+}
+
+@media(max-width:600px){
+
+  header{
+    padding:0 15px;
+  }
+
+  .logo{
+    font-size:20px;
+  }
+
+  .icons{
+    gap:12px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero{
+    height:350px;
+  }
+
+  .hero h1{
+    font-size:30px;
+    letter-spacing:2px;
+  }
+
+  .products{
+    padding:55px 15px;
+  }
+
+  .section-title{
+    font-size:27px;
+  }
+
+  .filter-area{
+    flex-direction:column;
+  }
+
+  .filter-area select,
+  .filter-area input{
+    width:100%;
+  }
+
+  .action-buttons{
+    flex-direction:column;
+  }
+
+  .action-buttons button{
+    width:100%;
+  }
+
+  .cart-item{
+    flex-wrap:wrap;
+  }
+
+  .cart-item img{
+    width:80px;
+    height:80px;
+  }
+
+  .cart-total{
+    font-size:20px;
+  }
+
+}
+
+/* ================================
+   ORDER COMPLETE
+================================ */
+
+.order-complete{
+  max-width:700px;
+  text-align:center;
+  padding-top:80px;
+  padding-bottom:100px;
+}
+
+.order-icon{
+  width:80px;
+  height:80px;
+
+  margin:0 auto 25px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#111;
+  color:#fff;
+
+  border-radius:50%;
+
+  font-size:40px;
+  font-weight:bold;
+}
+
+.order-complete h1{
+  font-size:32px;
+  margin-bottom:10px;
+}
+
+.order-message{
+  color:#777;
+  margin-bottom:35px;
+}
+
+.order-box{
+  padding:25px;
+  background:#f5f5f5;
+  margin-bottom:30px;
+}
+
+.order-box p{
+  color:#777;
+  margin-bottom:5px;
+}
+
+.order-box strong{
+  font-size:22px;
+}
+
+.order-info{
+  text-align:left;
+  border-top:1px solid #ddd;
+}
+
+.order-info p{
+  padding:18px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.order-total{
+  font-size:18px;
+}
+
+.order-total strong{
+  font-size:28px;
+}
+
+@media(max-width:600px){
+
+  .order-complete{
+    padding:60px 20px;
+  }
+
+  .order-complete h1{
+    font-size:25px;
+  }
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div
+  id="overlay"
+  class="overlay"
+  onclick="closeMenu()">
+</div>
+
+<div
+  id="menu"
+  class="menu">
+
+  <h2>AOKICKS</h2>
+
+  <a href="#" onclick="goHome()">
+    HOME
+  </a>
+
+  <a href="#products" onclick="closeMenu()">
+    SHOP
+  </a>
+
+  <a href="#products" onclick="closeMenu()">
+    NEW
+  </a>
+  <a href="#" onclick="showFavorites(); closeMenu();">
+  ❤️ お気に入り
+</a>
+
+   <a href="#" onclick="showCart(); closeMenu();">
+  🛒 カート
+</a>
+
+  <a href="#footer" onclick="closeMenu()">
+    CONTACT
+  </a>
+
+</div>
+
+<header>
+
+  <div
+    class="icon"
+    onclick="toggleMenu()">
+    ☰
+  </div>
+
+  <div class="logo">
+    AOKICKS
+  </div>
+
+  <div class="icons">
+
+    <div
+      class="icon"
+      onclick="toggleSearch()">
+      🔍
+    </div>
+
+    <div
+      class="icon"
+      onclick="showCart()">
+
+      🛒
+
+      <span id="cartCount">
+        0
+      </span>
+
+    </div>
+
+  </div>
+
+</header>
+
+<div
+  id="searchBox"
+  class="search-box">
+
+  <input
+    id="searchInput"
+    type="text"
+    placeholder="商品を検索..."
+  >
+
+</div>
+
+<main id="homePage">
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <h1>
+      GET BUCKETS OR DIE
+    </h1>
+
+    <p>
+      BASKETBALL × STREET × STYLE
+    </p>
+
+    <button
+      onclick="scrollToProducts()">
+      SHOP NOW
+    </button>
+
+  </div>
+
+</section>
+
+<section
+  id="products"
+  class="products">
+
+  <h2 class="section-title">
+    AOKICKS COLLECTION
+  </h2>
+
+  <div class="filter-area">
+
+    <input
+      id="searchProduct"
+      type="text"
+      placeholder="商品名で検索..."
+    >
+
+    <select id="categoryFilter">
+
+      <option value="all">
+        すべてのカテゴリー
+      </option>
+
+      <option value="Tシャツ">
+        Tシャツ
+      </option>
+
+      <option value="パーカー">
+        パーカー
+      </option>
+
+      <option value="ソックス">
+        ソックス
+      </option>
+
+      <option value="シューズ">
+        シューズ
+      </option>
+
+      <option value="パンツ">
+        パンツ
+      </option>
+
+      <option value="アクセサリー">
+        アクセサリー
+      </option>
+
+      <option value="バスケットボール">
+        バスケットボール
+      </option>
+
+      <option value="バッグ">
+        バッグ
+      </option>
+
+      <option value="ジャケット">
+        ジャケット
+      </option>
+
+    </select>
+
+    <select id="sortFilter">
+
+      <option value="default">
+        おすすめ順
+      </option>
+
+      <option value="price-low">
+        価格が安い順
+      </option>
+
+      <option value="price-high">
+        価格が高い順
+      </option>
+
+      <option value="stock">
+        在庫が多い順
+      </option>
+
+    </select>
+
+  </div>
+
+  <div
+    id="productGrid"
+    class="grid">
+  </div>
+
+</section>
+
+<div class="action-buttons">
+
+  <button
+    onclick="resetCart()">
+    カートを空にする
+  </button>
+
+  <button
+    onclick="showFavorites()">
+    ❤️ お気に入り一覧
+  </button>
+
+</div>
+
+</main>
+
+<footer id="footer">
+
+  <h2>
+    AOKICKS
+  </h2>
+
+  <p>
+    BASKETBALL × STREET
+  </p>
+
+  <p style="margin-top:20px;">
+    © 2026 AOKICKS STYLE
+  </p>
+
+</footer>
+
+<script>
+
+/* ================================
+   PRODUCTS
+================================ */
+
+const products = [
+
+  {
+    id:1,
+    name:"Basketball Tee",
+    price:4980,
+    category:"Tシャツ",
+    rating:4.8,
+    stock:12,
+    image:"https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=600&q=80",
+    description:
+      "バスケットボールを楽しむためのスタイリッシュなTシャツ。"
+  },
+
+  {
+    id:2,
+    name:"Black Hoodie",
+    price:8980,
+    category:"パーカー",
+    rating:4.9,
+    stock:8,
+    image:"https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80",
+    description:
+      "ストリートスタイルに合わせやすいブラックフーディー。"
+  },
+
+  {
+    id:3,
+    name:"Basketball Socks",
+    price:1980,
+    category:"ソックス",
+    rating:4.5,
+    stock:20,
+    image:"https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=600&q=80",
+    description:
+      "バスケットボールプレイヤー向けのスポーツソックス。"
+  },
+
+  {
+    id:4,
+    name:"Air Jordan 4",
+    price:32450,
+    category:"シューズ",
+    rating:5.0,
+    stock:3,
+    image:"https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=600&q=80",
+    description:
+      "ストリートスタイルを完成させる人気スニーカー。"
+  },
+
+  {
+    id:5,
+    name:"Basketball Shorts",
+    price:5980,
+    category:"パンツ",
+    rating:4.6,
+    stock:10,
+    image:"https://picsum.photos/600/600?11",
+    description:
+      "軽くて動きやすいバスケットボールショーツ。"
+  },
+
+  {
+    id:6,
+    name:"Street Cap",
+    price:3980,
+    category:"アクセサリー",
+    rating:4.4,
+    stock:15,
+    image:"https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=600&q=80",
+    description:
+      "コーディネートのアクセントになるストリートキャップ。"
+  },
+
+  {
+    id:7,
+    name:"Oversized Tee",
+    price:5480,
+    category:"Tシャツ",
+    rating:4.7,
+    stock:7,
+    image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80",
+    description:
+      "ゆったり着られるオーバーサイズTシャツ。"
+  },
+
+  {
+    id:8,
+    name:"Gray Hoodie",
+    price:9280,
+    category:"パーカー",
+    rating:4.8,
+    stock:5,
+    image:"https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80",
+    description:
+      "普段使いにもおすすめのグレーフーディー。"
+  },
+
+  {
+    id:9,
+    name:"Basketball Ball",
+    price:6980,
+    category:"バスケットボール",
+    rating:4.9,
+    stock:9,
+    image:"https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=600&q=80",
+    description:
+      "練習やゲームで使用できるバスケットボール。"
+  },
+
+  {
+    id:10,
+    name:"High Top Shoes",
+    price:18980,
+    category:"シューズ",
+    rating:4.6,
+    stock:6,
+    image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
+    description:
+      "バスケットボールにもストリートにも使えるハイカットシューズ。"
+  },
+
+  {
+    id:11,
+    name:"AOKICKS Bag",
+    price:7480,
+    category:"バッグ",
+    rating:4.7,
+    stock:11,
+    image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80",
+    description:
+      "バスケットボール用品を収納できるスポーツバッグ。"
+  },
+
+  {
+    id:12,
+    name:"Street Jacket",
+    price:12980,
+    category:"ジャケット",
+    rating:4.8,
+    stock:4,
+    image:"https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80",
+    description:
+      "ストリートファッションに合わせやすいジャケット。"
+  }
+
+];
+
+
+/* ================================
+   LOCAL STORAGE
+================================ */
+
+let cartItems =
+  JSON.parse(
+    localStorage.getItem("cartItems") || "[]"
+  );
+
+let favorites =
+  JSON.parse(
+    localStorage.getItem("favorites") || "[]"
+  );
+
+
+/* ================================
+   CART
+================================ */
+
+function updateCart(){
+
+  const cartCount =
+    cartItems.reduce(
+      (sum,item) =>
+        sum + item.quantity,
+      0
+    );
+
+  const total =
+    cartItems.reduce(
+      (sum,item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+  localStorage.setItem(
+    "cartItems",
+    JSON.stringify(cartItems)
+  );
+
+  localStorage.setItem(
+    "cart",
+    cartCount
+  );
+
+  localStorage.setItem(
+    "total",
+    total
+  );
+
+  const element =
+    document.getElementById(
+      "cartCount"
+    );
+
+  if(element){
+    element.textContent = cartCount;
+  }
+
+}
+
+updateCart();
+
+
+/* ================================
+   RENDER
+================================ */
+
+function renderProducts(list){
+
+  const grid =
+    document.getElementById(
+      "productGrid"
+    );
+
+  if(!grid){
+    return;
+  }
+
+  grid.innerHTML = "";
+
+  if(list.length === 0){
+
+    grid.innerHTML = `
+      <div class="empty">
+        商品が見つかりません
+      </div>
+    `;
+
+    return;
+  }
+
+  list.forEach(product => {
+
+    const favorite =
+      favorites.includes(
+        product.name
+      );
+
+    const card =
+      document.createElement("div");
+
+    card.className = "card";
+
+    card.onclick =
+      () => openProduct(
+        product.name
+      );
+
+    const stockText =
+      product.stock === 0
+        ? "在庫切れ"
+        : "在庫：" + product.stock + "点";
+
+    const stockClass =
+      product.stock === 0
+        ? "stock out"
+        : "stock";
+
+    const badge =
+      product.stock <= 5
+        ? `<span class="badge">残りわずか</span>`
+        : "";
+
+    card.innerHTML = `
+
+      <div class="card-image">
+
+        ${badge}
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+        >
+
+      </div>
+
+      <div class="card-info">
+
+        <h3>
+          ${product.name}
+        </h3>
+
+        <p class="category">
+          ${product.category}
+        </p>
+
+        <p class="price">
+          ¥${product.price.toLocaleString()}
+        </p>
+
+        <p class="${stockClass}">
+          ${stockText}
+        </p>
+
+        <button
+          ${product.stock === 0 ? "disabled" : ""}
+          onclick="
+            event.stopPropagation();
+            addCart(
+              '${product.name}',
+              1
+            )
+          "
+        >
+          ${
+            product.stock === 0
+              ? "在庫切れ"
+              : "🛒 カートに追加"
+          }
+        </button>
+
+        <button
+          class="favorite-button"
+          onclick="
+            event.stopPropagation();
+            toggleFavorite(
+              '${product.name}'
+            )
+          "
+        >
+          ${
+            favorite
+              ? "❤️ お気に入り済み"
+              : "♡ お気に入り"
+          }
+        </button>
+
+      </div>
+
+    `;
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+
+/* ================================
+   FILTER
+================================ */
+
+function filterProducts(){
+
+  const keyword =
+    document
+      .getElementById("searchProduct")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const category =
+    document
+      .getElementById("categoryFilter")
+      .value;
+
+  const sort =
+    document
+      .getElementById("sortFilter")
+      .value;
+
+  let result =
+    products.filter(product => {
+
+      const matchName =
+        product.name
+          .toLowerCase()
+          .includes(keyword);
+
+      const matchCategory =
+        category === "all" ||
+        product.category === category;
+
+      return matchName && matchCategory;
+
+    });
+
+  if(sort === "price-low"){
+
+    result.sort(
+      (a,b) =>
+        a.price - b.price
+    );
+
+  }
+
+  if(sort === "price-high"){
+
+    result.sort(
+      (a,b) =>
+        b.price - a.price
+    );
+
+  }
+
+  if(sort === "stock"){
+
+    result.sort(
+      (a,b) =>
+        b.stock - a.stock
+    );
+
+  }
+
+  renderProducts(result);
+
+}
+
+renderProducts(products);
+
+document
+  .getElementById("searchProduct")
+  .addEventListener(
+    "input",
+    filterProducts
+  );
+
+document
+  .getElementById("categoryFilter")
+  .addEventListener(
+    "change",
+    filterProducts
+  );
+
+document
+  .getElementById("sortFilter")
+  .addEventListener(
+    "change",
+    filterProducts
+  );
+
+
+/* ================================
+   MENU
+================================ */
+
+function toggleMenu(){
+
+  document
+    .getElementById("menu")
+    .classList
+    .toggle("active");
+
+  document
+    .getElementById("overlay")
+    .classList
+    .toggle("active");
+
+}
+
+function closeMenu(){
+
+  document
+    .getElementById("menu")
+    .classList
+    .remove("active");
+
+  document
+    .getElementById("overlay")
+    .classList
+    .remove("active");
+
+}
+
+
+/* ================================
+   SEARCH
+================================ */
+
+function toggleSearch(){
+
+  const box =
+    document.getElementById(
+      "searchBox"
+    );
+
+  box.classList.toggle("active");
+
+  if(
+    box.classList.contains("active")
+  ){
+
+    document
+      .getElementById("searchInput")
+      .focus();
+
+  }
+
+}
+
+document
+  .getElementById("searchInput")
+  .addEventListener(
+    "input",
+    function(){
+
+      const keyword =
+        this.value
+          .toLowerCase()
+          .trim();
+
+      const result =
+        products.filter(
+          product =>
+            product.name
+              .toLowerCase()
+              .includes(keyword)
+        );
+
+      renderProducts(result);
+
+      document
+        .getElementById("products")
+        .scrollIntoView({
+          behavior:"smooth"
+        });
+
+    }
+  );
+
+
+/* ================================
+   ADD CART
+================================ */
+
+function addCart(name,quantity){
+
+  const product =
+    products.find(
+      item =>
+        item.name === name
+    );
+
+  if(!product){
+    return;
+  }
+
+  if(product.stock <= 0){
+
+    alert(
+      "申し訳ありません。\n" +
+      "この商品は在庫切れです。"
+    );
+
+    return;
+  }
+
+  if(quantity > product.stock){
+
+    alert(
+      "在庫は" +
+      product.stock +
+      "点までです。"
+    );
+
+    return;
+  }
+
+  const existing =
+    cartItems.find(
+      item =>
+        item.name === name
+    );
+
+  if(existing){
+
+    if(
+      existing.quantity +
+      quantity >
+      product.stock
+    ){
+
+      alert(
+        "在庫数を超えています。"
+      );
+
+      return;
+
+    }
+
+    existing.quantity += quantity;
+
+  }else{
+
+    cartItems.push({
+
+      name:name,
+
+      price:product.price,
+
+      image:product.image,
+
+      quantity:quantity
+
+    });
+
+  }
+
+  updateCart();
+
+  alert(
+    "🛒 カートに追加しました！\n\n" +
+    name +
+    "\n数量：" +
+    quantity
+  );
+
+}
+
+
+/* ================================
+   SHOW CART
+================================ */
+
+function showCart(){
+
+  if(cartItems.length === 0){
+
+    document.body.innerHTML = `
+
+      <div class="page">
+
+        <h1>
+          🛒 ショッピングカート
+        </h1>
+
+        <div class="empty">
+
+          <h2>
+            カートは空です
+          </h2>
+
+          <p>
+            商品をカートに追加してください。
+          </p>
+
+        </div>
+
+        <button
+          onclick="goHome()"
+        >
+          ← 商品一覧へ戻る
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  let html = "";
+
+  cartItems.forEach(
+    (item,index) => {
+
+      html += `
+
+        <div class="cart-item">
+
+          <img
+            src="${item.image}"
+            alt="${item.name}"
+          >
+
+          <div class="cart-info">
+
+            <h3>
+              ${item.name}
+            </h3>
+
+            <p>
+              ¥${item.price.toLocaleString()}
+            </p>
+
+            <div class="quantity">
+
+              <button
+                onclick="
+                  changeQuantity(
+                    ${index},
+                    -1
+                  )
+                "
+              >
+                −
+              </button>
+
+              <span>
+                ${item.quantity}
+              </span>
+
+              <button
+                onclick="
+                  changeQuantity(
+                    ${index},
+                    1
+                  )
+                "
+              >
+                ＋
+              </button>
+
+              <button
+                class="remove-button"
+                onclick="
+                  removeCartItem(
+                    ${index}
+                  )
+                "
+              >
+                削除
+              </button>
+
+            </div>
+
+          </div>
+
+          <strong>
+            ¥${(
+              item.price *
+              item.quantity
+            ).toLocaleString()}
+          </strong>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+  const total =
+    cartItems.reduce(
+      (sum,item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+  document.body.innerHTML = `
+
+    <div class="page">
+
+      <h1>
+        🛒 ショッピングカート
+      </h1>
+
+      ${html}
+
+      <div class="cart-total">
+
+        <span>
+          合計
+        </span>
+
+        <span>
+          ¥${total.toLocaleString()}
+        </span>
+
+      </div>
+
+      <button
+        onclick="checkout()"
+      >
+        購入手続きへ
+      </button>
+
+      <button
+        onclick="goHome()"
+        style="background:#666;"
+      >
+        ← 商品一覧へ戻る
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================================
+   QUANTITY
+================================ */
+
+function changeQuantity(index,amount){
+
+  const item =
+    cartItems[index];
+
+  if(!item){
+    return;
+  }
+
+  const product =
+    products.find(
+      p =>
+        p.name === item.name
+    );
+
+  if(!product){
+    return;
+  }
+
+  if(
+    amount > 0 &&
+    item.quantity + amount >
+    product.stock
+  ){
+
+    alert(
+      "現在の在庫は" +
+      product.stock +
+      "点です。"
+    );
+
+    return;
+
+  }
+
+  item.quantity += amount;
+
+  if(item.quantity <= 0){
+
+    cartItems.splice(
+      index,
+      1
+    );
+
+  }
+
+  updateCart();
+
+  if(cartItems.length === 0){
+    goHome();
+  }else{
+    showCart();
+  }
+
+}
+
+
+/* ================================
+   REMOVE
+================================ */
+
+function removeCartItem(index){
+
+  if(!cartItems[index]){
+    return;
+  }
+
+  cartItems.splice(
+    index,
+    1
+  );
+
+  updateCart();
+
+  if(cartItems.length === 0){
+
+  showCart();
+
+}else{
+
+  showCart();
+
+}
+
+}
+
+
+/* ================================
+   RESET
+================================ */
+
+function resetCart(){
+
+  if(cartItems.length === 0){
+
+    alert(
+      "カートはすでに空です"
+    );
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      "カートを空にしますか？"
+    )
+  ){
+
+    return;
+
+  }
+
+  cartItems = [];
+
+  updateCart();
+
+  alert(
+    "カートを空にしました"
+  );
+
+}
+
+
+/* ================================
+   PRODUCT DETAIL
+================================ */
+
+function openProduct(name){
+
+  const product =
+    products.find(
+      item =>
+        item.name === name
+    );
+
+  if(!product){
+
+    alert(
+      "商品が見つかりません"
+    );
+
+    return;
+
+  }
+
+  const stars =
+    "★".repeat(
+      Math.round(product.rating)
+    ) +
+    "☆".repeat(
+      5 -
+      Math.round(product.rating)
+    );
+
+  const stockMessage =
+    product.stock === 0
+      ? "在庫切れ"
+      : "在庫：" +
+        product.stock +
+        "点";
+
+  document.body.innerHTML = `
+
+    <div class="product-detail">
+
+      <div>
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+        >
+
+      </div>
+
+      <div>
+
+        <p class="category">
+          ${product.category}
+        </p>
+
+        <h1>
+          ${product.name}
+        </h1>
+
+        <div class="rating">
+
+          ${stars}
+
+          <span class="rating-text">
+            ${product.rating} / 5.0
+          </span>
+
+        </div>
+
+        <p class="product-price">
+          ¥${product.price.toLocaleString()}
+        </p>
+
+        <p class="product-description">
+          ${product.description}
+        </p>
+
+        <p
+          class="
+            detail-stock
+            ${
+              product.stock <= 3
+                ? "low"
+                : ""
+            }
+          "
+        >
+          ${stockMessage}
+        </p>
+
+        <div class="quantity-select">
+
+          <label>
+            数量
+          </label>
+
+          <input
+            id="detailQuantity"
+            type="number"
+            min="1"
+            max="${product.stock}"
+            value="1"
+          >
+
+        </div>
+
+        <button
+          onclick="
+            addFromDetail(
+              '${product.name}'
+            )
+          "
+          ${product.stock === 0 ? "disabled" : ""}
+        >
+          🛒 カートに追加
+        </button>
+
+        <button
+          onclick="
+            buyNow(
+              '${product.name}'
+            )
+          "
+          ${product.stock === 0 ? "disabled" : ""}
+        >
+          ⚡ 今すぐ購入
+        </button>
+
+        <button
+          class="btn-white"
+          onclick="
+            toggleFavorite(
+              '${product.name}'
+            )
+          "
+        >
+          ❤️ お気に入り
+        </button>
+
+        <button
+          onclick="goHome()"
+          style="background:#666;"
+        >
+          ← 商品一覧へ戻る
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================================
+   DETAIL ADD
+================================ */
+
+function addFromDetail(name){
+
+  const quantity =
+    Number(
+      document
+        .getElementById(
+          "detailQuantity"
+        )
+        .value
+    );
+
+  if(!quantity || quantity < 1){
+
+    alert(
+      "数量を入力してください。"
+    );
+
+    return;
+
+  }
+
+  addCart(
+    name,
+    quantity
+  );
+
+}
+
+
+/* ================================
+   BUY NOW
+================================ */
+
+function buyNow(name){
+
+  const quantity =
+    Number(
+      document
+        .getElementById(
+          "detailQuantity"
+        )
+        .value
+    );
+
+  const product =
+    products.find(
+      item =>
+        item.name === name
+    );
+
+  if(!product){
+    return;
+  }
+
+  if(
+    !quantity ||
+    quantity < 1
+  ){
+
+    alert(
+      "数量を入力してください。"
+    );
+
+    return;
+
+  }
+
+  if(
+    quantity >
+    product.stock
+  ){
+
+    alert(
+      "在庫は" +
+      product.stock +
+      "点までです。"
+    );
+
+    return;
+
+  }
+
+  cartItems = [
+
+    {
+      name:product.name,
+      price:product.price,
+      image:product.image,
+      quantity:quantity
+    }
+
+  ];
+
+  updateCart();
+
+  checkout();
+
+}
+
+
+/* ================================
+   FAVORITE
+================================ */
+
+function toggleFavorite(name){
+
+  const index =
+    favorites.indexOf(name);
+
+  if(index === -1){
+
+    favorites.push(name);
+
+    alert(
+      "❤️ " +
+      name +
+      "をお気に入りに追加しました"
+    );
+
+  }else{
+
+    favorites.splice(
+      index,
+      1
+    );
+
+    alert(
+      "💔 " +
+      name +
+      "をお気に入りから削除しました"
+    );
+
+  }
+
+  localStorage.setItem(
+    "favorites",
+    JSON.stringify(favorites)
+  );
+
+  if(
+    document.getElementById(
+      "productGrid"
+    )
+  ){
+
+    filterProducts();
+
+  }
+
+}
+
+
+/* ================================
+   FAVORITES PAGE
+================================ */
+
+function showFavorites(){
+
+  if(favorites.length === 0){
+
+    alert(
+      "お気に入り商品はありません"
+    );
+
+    return;
+
+  }
+
+  let html = "";
+
+  favorites.forEach(name => {
+
+    const product =
+      products.find(
+        item =>
+          item.name === name
+      );
+
+    if(!product){
+      return;
+    }
+
+    html += `
+
+      <div class="favorite-card">
+
+        <h2>
+          ${product.name}
+        </h2>
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+        >
+
+        <p>
+          ¥${product.price.toLocaleString()}
+        </p>
+
+        <p>
+          在庫：
+          ${product.stock}点
+        </p>
+
+        <button
+          onclick="
+            addCart(
+              '${product.name}',
+              1
+            )
+          "
+        >
+          🛒 カートに追加
+        </button>
+
+        <button
+          onclick="
+            toggleFavorite(
+              '${product.name}'
+            );
+            showFavorites();
+          "
+          style="background:#d00;"
+        >
+          ❤️ お気に入りから削除
+        </button>
+
+      </div>
+
+    `;
+
+  });
+
+  document.body.innerHTML = `
+
+    <div class="page">
+
+      <h1>
+        ❤️ お気に入り一覧
+      </h1>
+
+      ${html}
+
+      <button
+        onclick="goHome()"
+        style="background:#666;"
+      >
+        ← 商品一覧へ戻る
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================================
+   CHECKOUT
+================================ */
+
+function checkout(){
+
+  if(cartItems.length === 0){
+
+    alert(
+      "カートが空です"
+    );
+
+    return;
+
+  }
+
+  const total =
+    cartItems.reduce(
+      (sum,item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+  document.body.innerHTML = `
+
+    <div class="page">
+
+      <h1>
+        購入手続き
+      </h1>
+
+      <form
+        onsubmit="
+          completeOrder(event)
+        "
+      >
+
+        <div class="form-group">
+
+          <label>
+            お名前
+          </label>
+
+          <input
+            id="name"
+            type="text"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            メールアドレス
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            住所
+          </label>
+
+          <input
+            id="address"
+            type="text"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            支払い方法
+          </label>
+
+          <select id="payment">
+
+            <option>
+              クレジットカード
+            </option>
+
+            <option>
+              銀行振込
+            </option>
+
+            <option>
+              代金引換
+            </option>
+
+          </select>
+
+        </div>
+
+        <div
+          style="
+            border-top:1px solid #ddd;
+            padding-top:25px;
+            margin-top:25px;
+          "
+        >
+
+          <h2>
+            お支払い金額
+          </h2>
+
+          <p
+            style="
+              font-size:30px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            ¥${total.toLocaleString()}
+          </p>
+
+        </div>
+
+        <button
+          type="submit"
+        >
+          注文を確定する
+        </button>
+
+      </form>
+
+      <button
+        onclick="showCart()"
+        style="background:#666;"
+      >
+        ← カートへ戻る
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================================
+   COMPLETE ORDER
+================================ */
+
+/* ================================
+   COMPLETE ORDER
+================================ */
+
+function completeOrder(event){
+
+  event.preventDefault();
+
+  const name =
+    document.getElementById("name").value;
+
+  const email =
+    document.getElementById("email").value;
+
+  const address =
+    document.getElementById("address").value;
+
+  const payment =
+    document.getElementById("payment").value;
+
+  const total =
+    cartItems.reduce(
+      (sum,item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+  const orderNumber =
+    "AOKICKS-" +
+    Date.now().toString().slice(-6);
+
+  /* 在庫を減らす */
+
+  cartItems.forEach(item => {
+
+    const product =
+      products.find(
+        p => p.name === item.name
+      );
+
+    if(product){
+
+      product.stock =
+        Math.max(
+          0,
+          product.stock - item.quantity
+        );
+
+    }
+
+  });
+
+  /* カートを空にする */
+
+  cartItems = [];
+
+  updateCart();
+
+  /* 注文完了画面 */
+
+  document.body.innerHTML = `
+
+    <div class="page order-complete">
+
+      <div class="order-icon">
+        ✓
+      </div>
+
+      <h1>
+        ご注文ありがとうございます！
+      </h1>
+
+      <p class="order-message">
+        ご注文を正常に受け付けました。
+      </p>
+
+      <div class="order-box">
+
+        <p>
+          注文番号
+        </p>
+
+        <strong>
+          ${orderNumber}
+        </strong>
+
+      </div>
+
+      <div class="order-info">
+
+        <p>
+          <strong>お名前</strong>
+          <br>
+          ${name}
+        </p>
+
+        <p>
+          <strong>メールアドレス</strong>
+          <br>
+          ${email}
+        </p>
+
+        <p>
+          <strong>お届け先</strong>
+          <br>
+          ${address}
+        </p>
+
+        <p>
+          <strong>お支払い方法</strong>
+          <br>
+          ${payment}
+        </p>
+
+        <p class="order-total">
+          合計金額
+          <br>
+
+          <strong>
+            ¥${total.toLocaleString()}
+          </strong>
+
+        </p>
+
+      </div>
+
+      <button
+        onclick="goHome()"
+      >
+        商品一覧へ戻る
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================================
+   HOME
+================================ */
+
+function goHome(){
+
+  location.reload();
+
+}
+
+
+/* ================================
+   SCROLL
+================================ */
+
+function scrollToProducts(){
+
+  document
+    .getElementById(
+      "products"
+    )
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+/* ================================
+   HERO SLIDER
+================================ */
+
+const heroImages = [
+
+  "https://picsum.photos/1600/700?1",
+
+  "https://picsum.photos/1600/700?2",
+
+  "https://picsum.photos/1600/700?3"
+
+];
+
+let heroIndex = 0;
+
+setInterval(() => {
+
+  heroIndex++;
+
+  if(
+    heroIndex >=
+    heroImages.length
+  ){
+
+    heroIndex = 0;
+
+  }
+
+  const hero =
+    document.querySelector(
+      ".hero"
+    );
+
+  if(hero){
+
+    hero.style.backgroundImage =
+      `
+      linear-gradient(
+        rgba(0,0,0,.35),
+        rgba(0,0,0,.35)
+      ),
+      url("${heroImages[heroIndex]}")
+      `;
+
+  }
+
+},5000);
+
+
+/* ================================
+   KEYBOARD
+================================ */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Escape"){
+
+      closeMenu();
+
+      const searchBox =
+        document.getElementById(
+          "searchBox"
+        );
+
+      if(searchBox){
+
+        searchBox
+          .classList
+          .remove("active");
+
+      }
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
